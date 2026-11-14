@@ -1,0 +1,32 @@
+# 私有配置与运行产物
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 运行数据与备份（绝不入库）
+data/
+logs/
+backups/
+*.dump
+*.sql.gz
+*.log
+
+# 本地诊断产物
+live_*.txt
+receipt*.json
+
+# 编辑器 / 系统
+.DS_Store
+.idea/
+.vscode/
+*.swp

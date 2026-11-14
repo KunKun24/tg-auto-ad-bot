@@ -1,0 +1,38 @@
+[Unit]
+Description=Telegram Auto Advertising Persistent Worker
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+StartLimitIntervalSec=120
+StartLimitBurst=10
+
+[Service]
+Type=simple
+User=adbot
+Group=adbot
+WorkingDirectory=/opt/tg-auto-ad
+EnvironmentFile=/opt/tg-auto-ad/.env
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONIOENCODING=utf-8
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/tg-auto-ad/.venv/bin/python -u -m adbot.worker
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGTERM
+KillMode=control-group
+TimeoutStopSec=180
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/tg-auto-ad/data /opt/tg-auto-ad/logs /opt/tg-auto-ad/backups
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=1G
+TasksMax=128
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=tg-auto-ad-worker
+
+[Install]
+WantedBy=multi-user.target
