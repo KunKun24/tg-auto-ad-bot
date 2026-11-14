@@ -79,11 +79,12 @@ tg-auto-ad-bot/
 │   └── network.py        # Bot API timeouts and TLS handling
 ├── migrations/           # 001 init / 002 scheduler / 003 shared rate / 004 billing
 ├── deploy/               # two systemd units
-├── scripts/              # health / backup / restore / live diagnostics
+├── scripts/              # health / backup / restore / live diagnostics, docs i18n check
 ├── tests/                # 481 automated tests
-├── docs/                 # features, usage, billing, deployment, acceptance report
-├── CONTRACT.md           # module interfaces and business contract
+├── docs/                 # features, usage, billing, deployment, acceptance (English in docs/en/)
+├── CONTRACT.md           # module interfaces and business contract (English: CONTRACT.en.md)
 ├── BILLING_CONTRACT.md   # payments, quota, gate and sensitive-input contract
+├── SECURITY.md           # security notes and vulnerability reporting (English: SECURITY.en.md)
 └── .env.example          # no real credentials
 ```
 
@@ -202,16 +203,17 @@ limits and failed payments are possible. Decide for yourself and accept the cons
 
 ## Docs
 
-| Doc | Content |
-| --- | --- |
-| [功能介绍](docs/功能介绍.md) | Feature set and platform boundaries |
-| [使用说明](docs/使用说明.md) | Binding, content, buttons, tasks and admin operations |
-| [收费使用说明](docs/收费使用说明.md) | Plans, add-ons, purchase, orders, merchant config |
-| [收费升级报告](docs/收费升级报告.md) | Billing design, the real pitfall found, 481-test result, open items |
-| [部署与维护](docs/部署与维护.md) | Fresh install, systemd, health, backup and restore |
-| [测试与验收报告](docs/测试与验收报告.md) | Test breakdown, capacity smoke test, acceptance scope |
-| [CONTRACT.md](CONTRACT.md) | Module interfaces and business contract |
-| [BILLING_CONTRACT.md](BILLING_CONTRACT.md) | Payments, quota, send gate, sensitive input |
+| Doc | Content | 中文 |
+| --- | --- | --- |
+| [Features](docs/en/features.md) | Feature set and platform boundaries | [功能介绍](docs/功能介绍.md) |
+| [Usage](docs/en/usage.md) | Binding, content, buttons, tasks and admin operations | [使用说明](docs/使用说明.md) |
+| [Billing](docs/en/billing.md) | Plans, add-ons, purchase, orders, merchant config | [收费使用说明](docs/收费使用说明.md) |
+| [Billing report](docs/en/billing-report.md) | Billing design, the real pitfall found, 481-test result, open items | [收费升级报告](docs/收费升级报告.md) |
+| [Deployment](docs/en/deployment.md) | Fresh install, systemd, health, backup and restore | [部署与维护](docs/部署与维护.md) |
+| [Acceptance report](docs/en/acceptance-report.md) | Test breakdown, capacity smoke test, acceptance scope | [测试与验收报告](docs/测试与验收报告.md) |
+| [CONTRACT.en.md](CONTRACT.en.md) | Module interfaces and business contract | [模块契约](CONTRACT.md) |
+| [BILLING_CONTRACT.md](BILLING_CONTRACT.md) | Payments, quota, send gate, sensitive input | English only |
+| [SECURITY.en.md](SECURITY.en.md) | Vulnerability reporting and credential leaks | [安全策略](SECURITY.md) |
 
 ## License
 

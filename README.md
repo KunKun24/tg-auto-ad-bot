@@ -79,11 +79,12 @@ tg-auto-ad-bot/
 │   └── network.py        # Bot API 超时与 TLS 处理
 ├── migrations/           # 001 初始化 / 002 调度 / 003 共享限流 / 004 计费
 ├── deploy/               # 两个 systemd 单元
-├── scripts/              # health / backup / restore / live 诊断
+├── scripts/              # health / backup / restore / live 诊断、中英文档校验
 ├── tests/                # 481 项自动测试
-├── docs/                 # 功能、使用、收费、部署、验收报告
-├── CONTRACT.md           # 模块接口与业务约定
+├── docs/                 # 功能、使用、收费、部署、验收报告（英文版在 docs/en/）
+├── CONTRACT.md           # 模块接口与业务约定（英文：CONTRACT.en.md）
 ├── BILLING_CONTRACT.md   # 支付、额度、门禁、敏感输入约定
+├── SECURITY.md           # 安全说明与漏洞报告渠道（英文：SECURITY.en.md）
 └── .env.example          # 不含任何真实凭据
 ```
 
@@ -208,16 +209,19 @@ runuser -u adbot -- env PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -p 
 
 ## 文档
 
-| 文档 | 内容 |
-| --- | --- |
-| [功能介绍](docs/功能介绍.md) | 当前功能与平台边界 |
-| [使用说明](docs/使用说明.md) | 绑定、内容、按钮、任务与管理员操作 |
-| [收费使用说明](docs/收费使用说明.md) | 套餐、加量、购买、订单、收款配置与权益调整 |
-| [收费升级报告](docs/收费升级报告.md) | 计费设计与真实踩坑、481 项测试、待验证范围 |
-| [部署与维护](docs/部署与维护.md) | 全新部署、systemd、健康检查、备份与恢复 |
-| [测试与验收报告](docs/测试与验收报告.md) | 测试分布、容量烟测、真实 Telegram 验收范围 |
-| [模块契约](CONTRACT.md) | 开发接口与业务约定 |
-| [收费模块契约](BILLING_CONTRACT.md) | 支付、会员额度、发送门禁与敏感输入接口 |
+| 文档 | 内容 | English |
+| --- | --- | --- |
+| [功能介绍](docs/功能介绍.md) | 当前功能与平台边界 | [features](docs/en/features.md) |
+| [使用说明](docs/使用说明.md) | 绑定、内容、按钮、任务与管理员操作 | [usage](docs/en/usage.md) |
+| [收费使用说明](docs/收费使用说明.md) | 套餐、加量、购买、订单、收款配置与权益调整 | [billing](docs/en/billing.md) |
+| [收费升级报告](docs/收费升级报告.md) | 计费设计与真实踩坑、481 项测试、待验证范围 | [billing report](docs/en/billing-report.md) |
+| [部署与维护](docs/部署与维护.md) | 全新部署、systemd、健康检查、备份与恢复 | [deployment](docs/en/deployment.md) |
+| [测试与验收报告](docs/测试与验收报告.md) | 测试分布、容量烟测、真实 Telegram 验收范围 | [acceptance report](docs/en/acceptance-report.md) |
+| [模块契约](CONTRACT.md) | 开发接口与业务约定 | [contract](CONTRACT.en.md) |
+| [收费模块契约](BILLING_CONTRACT.md) | 支付、会员额度、发送门禁与敏感输入接口 | English only |
+| [安全策略](SECURITY.md) | 漏洞报告与凭据泄露处理 | [security](SECURITY.en.md) |
+
+所有英文文档的目录入口在 [`docs/en/`](docs/en/)。
 
 ## License
 

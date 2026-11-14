@@ -1,5 +1,7 @@
 # Billing upgrade contract
 
+**English** · 内部开发约定（无中文版）
+
 Billing module contract. Keep existing business data intact across the migration. No web server / callback listener. OKPay HMAC protocol: <https://docs.okaypay.me/doc.html>. Never print secrets or put payment tokens in sessions, raw updates, audit details, exceptions, or logs. Existing update persistence MUST redact secret-setting messages before durable insert.
 
 ## Ownership

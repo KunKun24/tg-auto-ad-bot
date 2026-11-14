@@ -1,5 +1,7 @@
 # 自动广告机器人实现约定
 
+**中文** · [English](CONTRACT.en.md)
+
 设计规模：约 2000 用户 / 10000+ 目标。Python 3.12、python-telegram-bot 22.8、asyncpg、PostgreSQL 16。无 Web。机器人进程持久化 getUpdates，Worker 独立运行。SQL 永久保存内容/版本/原始 update/日志。禁止把 Token 放代码/日志/测试。
 
 本文档是模块之间的接口约定，用于说明为什么要这样拆分、每个模块对外必须提供什么。它不是教程，阅读顺序建议：先看 [README](README.md) 与 [功能介绍](docs/功能介绍.md)，再回来看这里。
