@@ -27,7 +27,7 @@ An admin configures the OKPay merchant number and payment key inside the bot; th
 4. When rotating, the old encrypted credentials are kept so historical unfinished orders can still be queried; finish those orders before disabling the old key.
 5. The payment protocol follows the [official documentation](https://docs.okaypay.me/doc.html): uppercase HMAC-SHA256 signatures, the fixed official API, HTTPS certificate verification and no automatic redirects. Order queries are made twice with signatures and check merchant, order binding, amount, currency and status.
 6. The unique entitlement record and the order's `PAID` state commit in **the same transaction**, so a repeated query never grants twice.
-7. When a create request has an unclear outcome, `payLink` is not called again and the original order is kept; the Worker's independent query loop checks pending orders under an order lock with at least a 30-second backoff and bounded concurrency.
+7. When a create request has an unclear outcome, `payLink` is not called again and the original order is kept; the worker's independent query loop checks pending orders under an order lock with at least a 30-second backoff and bounded concurrency.
 
 Deleting the user's key message on Telegram is **best effort**: copies held by the platform or the client are not guaranteed to be gone. The project also never stores the payment key in content drafts, ordinary system configuration or audit records.
 

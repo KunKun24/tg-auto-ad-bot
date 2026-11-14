@@ -2,7 +2,7 @@
 
 [中文](../部署与维护.md) · **English**
 
-Project: `/opt/tg-auto-ad`. Bot: @KunKunGuangGaoBot. All business and management happen in a Telegram private chat; there is no web dashboard. The program uses official Bot API long polling, with a separate Worker and a persistent PostgreSQL 16 queue.
+Project: `/opt/tg-auto-ad`. Bot: @KunKunGuangGaoBot. All business and management happen in a Telegram private chat; there is no web dashboard. The program uses official Bot API long polling, with a separate worker and a persistent PostgreSQL 16 queue.
 
 ## Environment and files
 
@@ -51,9 +51,9 @@ journalctl -u tg-auto-ad-bot.service -u tg-auto-ad-worker.service -n 100 --no-pa
 journalctl -u tg-auto-ad-worker.service -f
 ```
 
-Both services start at boot and restart automatically on failure; a PostgreSQL advisory lock prevents two instances under the same role. The receiving service persists updates and handles user interaction; the Worker handles rotation, instant sources, broadcasts and test deletions. A new task defaults to a draft and must be confirmed for launch after saving. An unknown network result is never resent automatically — verify it in the task or broadcast detail.
+Both services start at boot and restart automatically on failure; a PostgreSQL advisory lock prevents two instances under the same role. The receiving service persists updates and handles user interaction; the worker handles rotation, instant sources, broadcasts and test deletions. A new task defaults to a draft and must be confirmed for launch after saving. An unknown network result is never resent automatically — verify it in the task or broadcast detail.
 
-On every start the receiving service tries to send one startup notification to each of the admins 100000001 and 100000002; it never sends ads automatically to all users, channels or groups. Tasks and broadcasts explicitly launched continue from database state; requests left in flight become `UNKNOWN`. If the Worker raises an error it tries to notify the admins, and after repeated abnormal exits systemd restarts it.
+On every start the receiving service tries to send one startup notification to each of the admins 100000001 and 100000002; it never sends ads automatically to all users, channels or groups. Tasks and broadcasts explicitly launched continue from database state; requests left in flight become `UNKNOWN`. If the worker raises an error it tries to notify the admins, and after repeated abnormal exits systemd restarts it.
 
 ## Health checks
 
@@ -62,7 +62,7 @@ cd /opt/tg-auto-ad
 runuser -u adbot -- .venv/bin/python scripts/health.py
 ```
 
-It prints the receiving and Worker heartbeats, pending and errored updates, the `UNKNOWN` count, running tasks, database size and migrations. It exits 0 when the receiving heartbeat is under 100 seconds and the Worker heartbeat under 120 seconds, otherwise 1. The first long poll after startup, a long 429 cooldown or a large batch can cause a temporary timeout, so judge together with the journal and the queue. The tool creates no scheduled jobs or external monitoring alerts; feed it into an existing monitoring system.
+It prints the receiving and worker heartbeats, pending and errored updates, the `UNKNOWN` count, running tasks, database size and migrations. It exits 0 when the receiving heartbeat is under 100 seconds and the worker heartbeat under 120 seconds, otherwise 1. The first long poll after startup, a long 429 cooldown or a large batch can cause a temporary timeout, so judge together with the journal and the queue. The tool creates no scheduled jobs or external monitoring alerts; feed it into an existing monitoring system.
 
 ## SQL backup and restore
 
@@ -87,7 +87,7 @@ After verifying the contents, stop both services, back up the current database, 
 
 Troubleshooting on 2026-11-08 confirmed that the send connection can produce `ConnectTimeout` or a TLS `Hostname mismatch` while the service process is still alive. Use `systemctl status` to inspect both services, and judge together with the health check, the journal, task failure records and the actual API permissions — never treat a running process alone as proof that the business is healthy.
 
-The private `.env` accepts an optional `TELEGRAM_API_IPS`: a comma-separated list of `api.telegram.org` addresses that the deployer has verified independently (the domain is operated by Telegram and its addresses change, so never copy an example). Confirm them first through independent DoH or authoritative resolution, and keep TLS verification against the normal hostname. This setting only affects exact hostname resolution inside this program's process; it does not change the system DNS/hosts, replace the API URL or disable certificate verification. If the addresses stop working, re-verify or clear this setting, then restart both the receiving service and the Worker.
+The private `.env` accepts an optional `TELEGRAM_API_IPS`: a comma-separated list of `api.telegram.org` addresses that the deployer has verified independently (the domain is operated by Telegram and its addresses change, so never copy an example). Confirm them first through independent DoH or authoritative resolution, and keep TLS verification against the normal hostname. This setting only affects exact hostname resolution inside this program's process; it does not change the system DNS/hosts, replace the API URL or disable certificate verification. If the addresses stop working, re-verify or clear this setting, then restart both the receiving service and the worker.
 
 `Chat not found` / `Member list is inaccessible` can also mean the bot was removed from the target. With "skip on failure" enabled a task keeps advancing and keeps the failure records; a scheduling batch marked `COMPLETED` does not mean every delivery succeeded — check the `SUCCESS` / `FAILED` delivery counts. Add the bot back to the target with admin and posting rights, re-bind it, then manually resume the paused tasks; do not replay every completed failing batch to the channel.
 
@@ -118,7 +118,7 @@ The billing database migration is `004_billing.sql`. An admin enters the OKPay m
 
 An SQL backup contains only the encrypted credentials, so a restore also needs the original encryption key and the private service configuration kept safely alongside it. When rotating the payment key, keep the old encrypted credentials for querying historical orders; do not delete them or export them into logs or source archives. In the inbox a plain admin private-chat message keeps only a redacted placeholder — the original text exists in memory only while it is processed, so an unfinished sensitive input has to be re-sent after a restart.
 
-The Worker has its own payment-query loop and uses no external web callback or extra TCP listener. Pending orders are queried under an order lock, with at least a 30-second backoff and bounded concurrency; a create request that times out never rebuilds the order automatically. When the outcome is unclear the original order is kept, and recovering the link by calling the create endpoint again is forbidden.
+The worker has its own payment-query loop and uses no external web callback or extra TCP listener. Pending orders are queried under an order lock, with at least a 30-second backoff and bounded concurrency; a create request that times out never rebuilds the order automatically. When the outcome is unclear the original order is kept, and recovering the link by calling the create endpoint again is forbidden.
 
 For an original order whose link was lost and whose only problem was exact-link format validation, the official fixed payment link can be rebuilt once two signed queries both confirm the same unpaid order; other review states are not cleared automatically. Crediting a payment still requires an exact match on amount, currency, merchant and order, and the unique entitlement record and the order's `PAID` state commit in the same transaction. Recovering an unpaid link is not acceptance of a paid flow.
 
